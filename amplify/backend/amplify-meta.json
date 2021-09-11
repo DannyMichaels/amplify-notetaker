@@ -1,29 +1,39 @@
 {
-	"providers": {
-		"awscloudformation": {
-			"AuthRoleName": "amplifynotetaker-20210911164942-authRole",
-			"UnauthRoleArn": "arn:aws:iam::864440812229:role/amplifynotetaker-20210911164942-unauthRole",
-			"AuthRoleArn": "arn:aws:iam::864440812229:role/amplifynotetaker-20210911164942-authRole",
-			"Region": "us-east-1",
-			"DeploymentBucketName": "amplifynotetaker-20210911164942-deployment",
-			"UnauthRoleName": "amplifynotetaker-20210911164942-unauthRole",
-			"StackName": "amplifynotetaker-20210911164942",
-			"StackId": "arn:aws:cloudformation:us-east-1:864440812229:stack/amplifynotetaker-20210911164942/ca810da0-1341-11ec-9c0f-1207b5ce24cf"
-		}
-	},
-	"auth": {
-		"cognitoda897628": {
-			"service": "Cognito",
-			"providerPlugin": "awscloudformation"
-		}
-	},
-	"api": {
-		"amplifynotetaker": {
-			"service": "AppSync",
-			"providerPlugin": "awscloudformation",
-			"output": {
-				"securityType": "AMAZON_COGNITO_USER_POOLS"
-			}
-		}
-	}
+    "providers": {
+        "awscloudformation": {
+            "AuthRoleName": "amplifynotetaker-20210911164942-authRole",
+            "UnauthRoleArn": "arn:aws:iam::864440812229:role/amplifynotetaker-20210911164942-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::864440812229:role/amplifynotetaker-20210911164942-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "amplifynotetaker-20210911164942-deployment",
+            "UnauthRoleName": "amplifynotetaker-20210911164942-unauthRole",
+            "StackName": "amplifynotetaker-20210911164942",
+            "StackId": "arn:aws:cloudformation:us-east-1:864440812229:stack/amplifynotetaker-20210911164942/ca810da0-1341-11ec-9c0f-1207b5ce24cf"
+        }
+    },
+    "auth": {
+        "cognitoda897628": {
+            "service": "Cognito",
+            "providerPlugin": "awscloudformation",
+            "providerMetadata": {
+                "s3TemplateURL": "https://s3.amazonaws.com/amplifynotetaker-20210911164942-deployment/amplify-cfn-templates/auth/cognitoda897628-cloudformation-template.yml",
+                "logicalId": "authcognitoda897628"
+            },
+            "lastPushTimeStamp": "2021-09-11T21:06:43.185Z"
+        }
+    },
+    "api": {
+        "amplifynotetaker": {
+            "service": "AppSync",
+            "providerPlugin": "awscloudformation",
+            "output": {
+                "securityType": "AMAZON_COGNITO_USER_POOLS"
+            },
+            "providerMetadata": {
+                "s3TemplateURL": "https://s3.amazonaws.com/amplifynotetaker-20210911164942-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+                "logicalId": "apiamplifynotetaker"
+            },
+            "lastPushTimeStamp": "2021-09-11T21:06:43.206Z"
+        }
+    }
 }

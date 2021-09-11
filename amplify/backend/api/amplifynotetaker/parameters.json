@@ -1,9 +1,3 @@
 {
-    "AppSyncApiName": "amplifynotetaker",
-    "AuthCognitoUserPoolId": {
-        "Fn::GetAtt": [
-            "authcognitoda897628",
-            "Outputs.UserPoolId"
-        ]
-    }
+  "AppSyncApiName": "amplifynotetaker"
 }
