@@ -1,14 +1,79 @@
 {
-    "providers": {
-        "awscloudformation": {
-            "AuthRoleName": "amplifynotetaker-20210911164942-authRole",
-            "UnauthRoleArn": "arn:aws:iam::864440812229:role/amplifynotetaker-20210911164942-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::864440812229:role/amplifynotetaker-20210911164942-authRole",
-            "Region": "us-east-1",
-            "DeploymentBucketName": "amplifynotetaker-20210911164942-deployment",
-            "UnauthRoleName": "amplifynotetaker-20210911164942-unauthRole",
-            "StackName": "amplifynotetaker-20210911164942",
-            "StackId": "arn:aws:cloudformation:us-east-1:864440812229:stack/amplifynotetaker-20210911164942/ca810da0-1341-11ec-9c0f-1207b5ce24cf"
-        }
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-amplifynotetaker-dev-175315-authRole",
+      "UnauthRoleArn": "arn:aws:iam::864440812229:role/amplify-amplifynotetaker-dev-175315-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::864440812229:role/amplify-amplifynotetaker-dev-175315-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-amplifynotetaker-dev-175315-deployment",
+      "UnauthRoleName": "amplify-amplifynotetaker-dev-175315-unauthRole",
+      "StackName": "amplify-amplifynotetaker-dev-175315",
+      "StackId": "arn:aws:cloudformation:us-east-1:864440812229:stack/amplify-amplifynotetaker-dev-175315/ac144540-134a-11ec-9cf0-0a204fe5f003",
+      "AmplifyAppId": "d19ko0p6h15fz4"
     }
+  },
+  "auth": {
+    "amplifynotetaker250d30e9": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false,
+      "frontendAuthConfig": {
+        "loginMechanisms": [
+          "EMAIL"
+        ],
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyMinLength": 8,
+          "passwordPolicyCharacters": []
+        },
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ]
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-amplifynotetaker-dev-175315-deployment/amplify-cfn-templates/auth/amplifynotetaker250d30e9-cloudformation-template.yml",
+        "logicalId": "authamplifynotetaker250d30e9"
+      },
+      "lastPushTimeStamp": "2021-09-11T22:03:36.651Z",
+      "output": {
+        "UserPoolId": "us-east-1_AcQme305B",
+        "AppClientIDWeb": "7s9sb9bjfagdailf77u4l62qq0",
+        "AppClientID": "3e6fl0d1vkna8vvn80pb7p6a6m",
+        "IdentityPoolId": "us-east-1:58c8f8b0-c29e-49f3-b9bb-bd377a70af37",
+        "UserPoolArn": "arn:aws:cognito-idp:us-east-1:864440812229:userpool/us-east-1_AcQme305B",
+        "IdentityPoolName": "amplifynotetaker250d30e9_identitypool_250d30e9__dev",
+        "UserPoolName": "amplifynotetaker250d30e9_userpool_250d30e9"
+      },
+      "lastPushDirHash": "DaLOHx+BpflpWTLuLALPgXvF7u0="
+    }
+  },
+  "api": {
+    "amplifynotetaker": {
+      "service": "AppSync",
+      "providerPlugin": "awscloudformation",
+      "output": {
+        "authConfig": {
+          "defaultAuthentication": {
+            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+            "userPoolConfig": {
+              "userPoolId": "authamplifynotetaker250d30e9"
+            }
+          },
+          "additionalAuthenticationProviders": []
+        },
+        "GraphQLAPIIdOutput": "qlhaxdbl3jcivdmxo6kzw7hmei",
+        "GraphQLAPIEndpointOutput": "https://2fspcz45azg7zesda5c2vmfwki.appsync-api.us-east-1.amazonaws.com/graphql"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-amplifynotetaker-dev-175315-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+        "logicalId": "apiamplifynotetaker"
+      },
+      "lastPushTimeStamp": "2021-09-11T22:03:36.651Z",
+      "lastPushDirHash": "XJCzgkbJ2NraWBVUbg7mbFocVZQ="
+    }
+  }
 }

@@ -1,6 +1,8 @@
 type Note {
   id: ID!
   note: String!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
 }
 
 enum ModelSortDirection {
@@ -13,7 +15,7 @@ type ModelNoteConnection {
   nextToken: String
 }
 
-input ModelStringFilterInput {
+input ModelStringInput {
   ne: String
   eq: String
   le: String
@@ -24,9 +26,12 @@ input ModelStringFilterInput {
   notContains: String
   between: [String]
   beginsWith: String
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
 }
 
-input ModelIDFilterInput {
+input ModelIDInput {
   ne: ID
   eq: ID
   le: ID
@@ -37,43 +42,71 @@ input ModelIDFilterInput {
   notContains: ID
   between: [ID]
   beginsWith: ID
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
 }
 
-input ModelIntFilterInput {
+input ModelIntInput {
   ne: Int
   eq: Int
   le: Int
   lt: Int
   ge: Int
   gt: Int
-  contains: Int
-  notContains: Int
   between: [Int]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
 }
 
-input ModelFloatFilterInput {
+input ModelFloatInput {
   ne: Float
   eq: Float
   le: Float
   lt: Float
   ge: Float
   gt: Float
-  contains: Float
-  notContains: Float
   between: [Float]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
 }
 
-input ModelBooleanFilterInput {
+input ModelBooleanInput {
   ne: Boolean
   eq: Boolean
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelSizeInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
 }
 
 input ModelNoteFilterInput {
-  id: ModelIDFilterInput
-  note: ModelStringFilterInput
+  id: ModelIDInput
+  note: ModelStringInput
   and: [ModelNoteFilterInput]
   or: [ModelNoteFilterInput]
   not: ModelNoteFilterInput
+}
+
+enum ModelAttributeTypes {
+  binary
+  binarySet
+  bool
+  list
+  map
+  number
+  numberSet
+  string
+  stringSet
+  _null
 }
 
 type Query {
@@ -92,13 +125,20 @@ input UpdateNoteInput {
 }
 
 input DeleteNoteInput {
-  id: ID
+  id: ID!
 }
 
 type Mutation {
-  createNote(input: CreateNoteInput!): Note
-  updateNote(input: UpdateNoteInput!): Note
-  deleteNote(input: DeleteNoteInput!): Note
+  createNote(input: CreateNoteInput!, condition: ModelNoteConditionInput): Note
+  updateNote(input: UpdateNoteInput!, condition: ModelNoteConditionInput): Note
+  deleteNote(input: DeleteNoteInput!, condition: ModelNoteConditionInput): Note
+}
+
+input ModelNoteConditionInput {
+  note: ModelStringInput
+  and: [ModelNoteConditionInput]
+  or: [ModelNoteConditionInput]
+  not: ModelNoteConditionInput
 }
 
 type Subscription {
