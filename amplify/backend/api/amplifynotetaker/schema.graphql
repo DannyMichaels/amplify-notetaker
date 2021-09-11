@@ -1,0 +1,6 @@
+# ! at end of type means required
+
+type Note @model {
+  id: ID!
+  note: String!
+}
