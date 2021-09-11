@@ -11,13 +11,17 @@ function App() {
     setNoteInput(e.target.value);
   };
 
-  const handleAddNote = (e) => {
+  const handleAddNote = async (e) => {
     e.preventDefault();
+
     const input = {
       note: noteInput,
     };
 
-    API.graphql(graphqlOperation(createNote, { input })); // execute mutation
+    const result = await API.graphql(graphqlOperation(createNote, { input })); // execute mutation
+    const newNote = result.data.createNote;
+    setNotes((prevState) => [newNote, ...prevState]);
+    setNoteInput('');
   };
 
   return (
@@ -30,6 +34,7 @@ function App() {
           type="text"
           placeholder="Write your note"
           className="pa2 f4"
+          value={noteInput}
           onChange={handleChangeNote}
         />
         <button type="submit" className="pa2 f4">
