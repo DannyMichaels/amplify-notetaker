@@ -1,21 +1,37 @@
 import { useState } from 'react';
 import { withAuthenticator } from 'aws-amplify-react';
+import { API, graphqlOperation } from 'aws-amplify';
+import { createNote } from './graphql/mutations';
 
 function App() {
-  const [notes, setNotes] = useState([
-    {
-      id: 1,
-      note: 'Hello world',
-    },
-  ]);
+  const [notes, setNotes] = useState([]);
+  const [noteInput, setNoteInput] = useState('');
+
+  const handleChangeNote = (e) => {
+    setNoteInput(e.target.value);
+  };
+
+  const handleAddNote = (e) => {
+    e.preventDefault();
+    const input = {
+      note: noteInput,
+    };
+
+    API.graphql(graphqlOperation(createNote, { input })); // execute mutation
+  };
 
   return (
     <div className="flex flex-column items-center justify-center pa3 bg-washed-red">
       <h1 className="code f2-l">Amplify Notetaker</h1>
 
       {/* Note form */}
-      <form className="mb3">
-        <input type="text" placeholder="Write your note" className="pa2 f4" />
+      <form className="mb3" onSubmit={handleAddNote}>
+        <input
+          type="text"
+          placeholder="Write your note"
+          className="pa2 f4"
+          onChange={handleChangeNote}
+        />
         <button type="submit" className="pa2 f4">
           Add note
         </button>
