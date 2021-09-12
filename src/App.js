@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { withAuthenticator } from 'aws-amplify-react';
 import { API, graphqlOperation } from 'aws-amplify';
 import { createNote, deleteNote, updateNote } from './graphql/mutations';
@@ -13,10 +13,6 @@ function App() {
   const [notes, setNotes] = useState([]);
   const [noteInput, setNoteInput] = useState('');
   const [id, setId] = useState('');
-
-  let createNoteListener = useRef();
-  let deleteNoteListener = useRef();
-  let updateNoteListener = useRef();
 
   const fetchNotes = async () => {
     const result = await API.graphql(graphqlOperation(listNotes));
@@ -75,7 +71,7 @@ function App() {
   useEffect(() => {
     fetchNotes();
 
-    createNoteListener.current = API.graphql(
+    const createNoteListener = API.graphql(
       graphqlOperation(onCreateNote)
     ).subscribe({
       //  this runs everytime a note has been created, even though there isn't a dependency array for it.
@@ -88,7 +84,7 @@ function App() {
       },
     });
 
-    deleteNoteListener.current = API.graphql(
+    const deleteNoteListener = API.graphql(
       graphqlOperation(onDeleteNote)
     ).subscribe({
       next: (noteData) => {
@@ -100,7 +96,7 @@ function App() {
       },
     });
 
-    updateNoteListener.current = API.graphql(
+    const updateNoteListener = API.graphql(
       graphqlOperation(onUpdateNote)
     ).subscribe({
       next: (noteData) => {
@@ -116,9 +112,9 @@ function App() {
 
     return () => {
       // remove the listener on unmount
-      createNoteListener.current.unsubscribe();
-      deleteNoteListener.current.unsubscribe();
-      updateNoteListener.current.unsubscribe();
+      createNoteListener.unsubscribe();
+      deleteNoteListener.unsubscribe();
+      updateNoteListener.unsubscribe();
     };
   }, []);
 

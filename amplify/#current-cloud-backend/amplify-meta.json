@@ -38,7 +38,7 @@
         "s3TemplateURL": "https://s3.amazonaws.com/amplify-amplifynotetaker-dev-175315-deployment/amplify-cfn-templates/auth/amplifynotetaker250d30e9-cloudformation-template.yml",
         "logicalId": "authamplifynotetaker250d30e9"
       },
-      "lastPushTimeStamp": "2021-09-11T22:03:36.651Z",
+      "lastPushTimeStamp": "2021-09-12T03:29:59.624Z",
       "output": {
         "UserPoolId": "us-east-1_AcQme305B",
         "AppClientIDWeb": "7s9sb9bjfagdailf77u4l62qq0",
@@ -72,8 +72,8 @@
         "s3TemplateURL": "https://s3.amazonaws.com/amplify-amplifynotetaker-dev-175315-deployment/amplify-cfn-templates/api/cloudformation-template.json",
         "logicalId": "apiamplifynotetaker"
       },
-      "lastPushTimeStamp": "2021-09-11T22:03:36.651Z",
-      "lastPushDirHash": "XJCzgkbJ2NraWBVUbg7mbFocVZQ="
+      "lastPushTimeStamp": "2021-09-12T03:30:00.441Z",
+      "lastPushDirHash": "5wCrMHXqC0PC8JhqI29x3Jk8SrI="
     }
   }
 }

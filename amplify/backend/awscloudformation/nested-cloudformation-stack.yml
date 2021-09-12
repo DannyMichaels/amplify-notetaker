@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Root Stack for AWS Amplify CLI",
+  "Description": "Root Stack for AWS Amplify Console",
   "Parameters": {
     "DeploymentBucketName": {
       "Description": "Name of the common deployment bucket provided by the parent stack",
@@ -135,7 +135,7 @@
             ]
           },
           "S3DeploymentBucket": "amplify-amplifynotetaker-dev-175315-deployment",
-          "S3DeploymentRootKey": "amplify-appsync-files/271af2d345d9c988c87b086c750f23160018ef59",
+          "S3DeploymentRootKey": "amplify-appsync-files/77445ff578fd5c5ed7e109edebb1085e355e9ad5",
           "env": "dev"
         }
       }
