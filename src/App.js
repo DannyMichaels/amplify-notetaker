@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { withAuthenticator } from 'aws-amplify-react';
 import { API, graphqlOperation } from 'aws-amplify';
 import { createNote } from './graphql/mutations';
+import { listNotes } from './graphql/queries';
 
 function App() {
   const [notes, setNotes] = useState([]);
@@ -23,6 +24,14 @@ function App() {
     setNotes((prevState) => [newNote, ...prevState]);
     setNoteInput('');
   };
+
+  useEffect(() => {
+    const fetchNotes = async () => {
+      const result = await API.graphql(graphqlOperation(listNotes));
+      setNotes(result.data.listNotes.items);
+    };
+    fetchNotes();
+  }, []);
 
   return (
     <div className="flex flex-column items-center justify-center pa3 bg-washed-red">
