@@ -1,13 +1,27 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { withAuthenticator } from 'aws-amplify-react';
 import { API, graphqlOperation } from 'aws-amplify';
 import { createNote, deleteNote, updateNote } from './graphql/mutations';
 import { listNotes } from './graphql/queries';
+import {
+  onCreateNote,
+  onDeleteNote,
+  onUpdateNote,
+} from './graphql/subscriptions';
 
 function App() {
   const [notes, setNotes] = useState([]);
   const [noteInput, setNoteInput] = useState('');
   const [id, setId] = useState('');
+
+  let createNoteListener = useRef();
+  let deleteNoteListener = useRef();
+  let updateNoteListener = useRef();
+
+  const fetchNotes = async () => {
+    const result = await API.graphql(graphqlOperation(listNotes));
+    setNotes(result.data.listNotes.items);
+  };
 
   const handleChangeNote = (e) => {
     setNoteInput(e.target.value);
@@ -27,35 +41,22 @@ function App() {
       id,
       note: noteInput,
     };
-    const result = await API.graphql(graphqlOperation(updateNote, { input }));
-    const updatedNote = result.data.updateNote;
-    // const index = notes.findIndex((note) => note.id === updatedNote.id);
-
-    // setNotes((prevState) => [
-    //   ...prevState.slice(0, index),
-    //   updatedNote,
-    //   ...prevState.slice(index + 1),
-    // ]);
-
-    setNotes((prevState) =>
-      prevState.map((note) => (note.id === id ? updatedNote : note))
-    );
+    await API.graphql(graphqlOperation(updateNote, { input }));
   };
 
   const handleAddNote = async (e) => {
     e.preventDefault();
 
-    const input = {
-      note: noteInput,
-    };
-
     // check if we have an existing note, if so, update it
     if (hasExistingNote()) {
       handleUpdateNote();
     } else {
-      const result = await API.graphql(graphqlOperation(createNote, { input })); // execute mutation
-      const newNote = result.data.createNote;
-      setNotes((prevState) => [newNote, ...prevState]);
+      const input = {
+        note: noteInput,
+      };
+
+      await API.graphql(graphqlOperation(createNote, { input })); // execute mutation
+
       setNoteInput('');
     }
   };
@@ -63,12 +64,7 @@ function App() {
   const handleDeleteNote = async (noteId) => {
     const input = { id: noteId };
 
-    const result = await API.graphql(graphqlOperation(deleteNote, { input }));
-    const deletedNoteId = result.data.deleteNote.id;
-
-    setNotes((prevState) =>
-      prevState.filter((note) => note.id !== deletedNoteId)
-    );
+    await API.graphql(graphqlOperation(deleteNote, { input }));
   };
 
   const handleSetNote = ({ note, id }) => {
@@ -77,11 +73,53 @@ function App() {
   };
 
   useEffect(() => {
-    const fetchNotes = async () => {
-      const result = await API.graphql(graphqlOperation(listNotes));
-      setNotes(result.data.listNotes.items);
-    };
     fetchNotes();
+
+    createNoteListener.current = API.graphql(
+      graphqlOperation(onCreateNote)
+    ).subscribe({
+      //  this runs everytime a note has been created, even though there isn't a dependency array for it.
+      next: (noteData) => {
+        const newNote = noteData.value.data.onCreateNote;
+        setNotes((prevState) => {
+          let prevNotes = prevState.filter((note) => note.id !== newNote.id);
+          return [...prevNotes, newNote];
+        });
+      },
+    });
+
+    deleteNoteListener.current = API.graphql(
+      graphqlOperation(onDeleteNote)
+    ).subscribe({
+      next: (noteData) => {
+        const deletedNote = noteData.value.data.onDeleteNote;
+
+        setNotes((prevState) =>
+          prevState.filter((note) => note.id !== deletedNote.id)
+        );
+      },
+    });
+
+    updateNoteListener.current = API.graphql(
+      graphqlOperation(onUpdateNote)
+    ).subscribe({
+      next: (noteData) => {
+        const updatedNote = noteData.value.data.onUpdateNote;
+
+        setNotes((prevState) =>
+          prevState.map((note) =>
+            note.id === updatedNote.id ? updatedNote : note
+          )
+        );
+      },
+    });
+
+    return () => {
+      // remove the listener on unmount
+      createNoteListener.current.unsubscribe();
+      deleteNoteListener.current.unsubscribe();
+      updateNoteListener.current.unsubscribe();
+    };
   }, []);
 
   return (
