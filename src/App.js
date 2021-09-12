@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { withAuthenticator } from 'aws-amplify-react';
-import { API, graphqlOperation } from 'aws-amplify';
+import { API, Auth, graphqlOperation } from 'aws-amplify';
 import { createNote, deleteNote, updateNote } from './graphql/mutations';
 import { listNotes } from './graphql/queries';
 import {
@@ -16,7 +16,12 @@ function App() {
 
   const fetchNotes = async () => {
     const result = await API.graphql(graphqlOperation(listNotes));
+
     setNotes(result.data.listNotes.items);
+  };
+
+  const getUser = async () => {
+    return await Auth.currentUserInfo();
   };
 
   const handleChangeNote = (e) => {
@@ -71,44 +76,50 @@ function App() {
   useEffect(() => {
     fetchNotes();
 
-    const createNoteListener = API.graphql(
-      graphqlOperation(onCreateNote)
-    ).subscribe({
-      //  this runs everytime a note has been created, even though there isn't a dependency array for it.
-      next: (noteData) => {
-        const newNote = noteData.value.data.onCreateNote;
-        setNotes((prevState) => {
-          let prevNotes = prevState.filter((note) => note.id !== newNote.id);
-          return [...prevNotes, newNote];
-        });
-      },
-    });
+    let createNoteListener, deleteNoteListener, updateNoteListener;
 
-    const deleteNoteListener = API.graphql(
-      graphqlOperation(onDeleteNote)
-    ).subscribe({
-      next: (noteData) => {
-        const deletedNote = noteData.value.data.onDeleteNote;
+    const activateNoteListeners = async () => {
+      createNoteListener = API.graphql(
+        graphqlOperation(onCreateNote, { owner: (await getUser()).username })
+      ).subscribe({
+        //  this runs everytime a note has been created, even though there isn't a dependency array for it.
+        next: (noteData) => {
+          const newNote = noteData.value.data.onCreateNote;
+          setNotes((prevState) => {
+            let prevNotes = prevState.filter((note) => note.id !== newNote.id);
+            return [...prevNotes, newNote];
+          });
+        },
+      });
 
-        setNotes((prevState) =>
-          prevState.filter((note) => note.id !== deletedNote.id)
-        );
-      },
-    });
+      deleteNoteListener = API.graphql(
+        graphqlOperation(onDeleteNote, { owner: (await getUser()).username })
+      ).subscribe({
+        next: (noteData) => {
+          const deletedNote = noteData.value.data.onDeleteNote;
 
-    const updateNoteListener = API.graphql(
-      graphqlOperation(onUpdateNote)
-    ).subscribe({
-      next: (noteData) => {
-        const updatedNote = noteData.value.data.onUpdateNote;
+          setNotes((prevState) =>
+            prevState.filter((note) => note.id !== deletedNote.id)
+          );
+        },
+      });
 
-        setNotes((prevState) =>
-          prevState.map((note) =>
-            note.id === updatedNote.id ? updatedNote : note
-          )
-        );
-      },
-    });
+      updateNoteListener = API.graphql(
+        graphqlOperation(onUpdateNote, { owner: (await getUser()).username })
+      ).subscribe({
+        next: (noteData) => {
+          const updatedNote = noteData.value.data.onUpdateNote;
+
+          setNotes((prevState) =>
+            prevState.map((note) =>
+              note.id === updatedNote.id ? updatedNote : note
+            )
+          );
+        },
+      });
+    };
+
+    activateNoteListeners();
 
     return () => {
       // remove the listener on unmount

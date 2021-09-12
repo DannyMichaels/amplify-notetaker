@@ -140,6 +140,16 @@
         }
       }
     },
+    "hostingS3AndCloudFront": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "TemplateURL": "https://s3.amazonaws.com/amplify-amplifynotetaker-dev-175315-deployment/amplify-cfn-templates/hosting/template.json",
+        "Parameters": {
+          "bucketName": "amplifynotetaker-20210912010304-hostingbucket",
+          "env": "dev"
+        }
+      }
+    },
     "UpdateRolesWithIDPFunction": {
       "DependsOn": [
         "AuthRole",
